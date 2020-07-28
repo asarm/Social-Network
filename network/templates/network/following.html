@@ -1,0 +1,32 @@
+{% extends "network/layout.html" %}
+
+{% block title %}
+    Followings
+{% endblock %}
+
+{% block body %}
+
+    {% for post in posts %}
+ <div class="card" style="margin: 0 auto;margin-top: 2%;width: 70%;margin-bottom: 2%;">
+  <div class="card-body" style="border-bottom: 2px solid black;padding: 5%">
+      <h3><a style="color: black" href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a></h3>
+      {% if post.user.username == current_user.username %}
+          <a href="{% url 'editPost' post.pk %}"><p class="text-muted">Edit</p></a>
+      {% endif %}
+        {{post.content}}
+      <hr>
+  <div class="row">
+        <div>Likes:<span id="liked{{post.id}}">{{post.liked.all.count}}</span></div>
+                          {% if request.user in post.liked.all %}
+                              <a class="likebutton" href="#" data-catid="{{ post.id }}" id="{{post.id}}" data-total="{{post.liked.all.count}}"  data-value="Unlike" value="submit"><i class="fa fa-heart" id="heart{{post.id}}" style="color:limegreen;margin-left: 10px"></i></a>
+                          {% else %}
+                              <a class="likebutton" href="#" data-catid="{{ post.id }}" id="{{post.id}}" data-total="{{post.liked.all.count}}"  data-value="Like" value="submit"><i class="fa fa-heart" id="heart{{post.id}}" style="color:black;border: 1px solid;margin-left: 10px"></i></a>
+                          {% endif %}
+        <div style="text-align: end;margin-left: 60%">{{ post.date }}</div>
+  </div>
+
+  </div>
+</div>
+    {% endfor %}
+
+{% endblock %}

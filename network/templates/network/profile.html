@@ -1,0 +1,54 @@
+{% extends "network/layout.html" %}
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="card" style="margin: 0 auto;justify-content: center;width: 80%;margin-top: 1%">
+      <h1 style="text-align: center;" class="card-header">{{userpage.username}}</h1>
+      {% if current_user.username != userpage.username %}
+          <form action="{% url 'profile' userpage.username %}" method="post">
+            {% csrf_token %}
+              {% if not check_following %}
+            <button type="submit" onclick="change_to_unfollow()" id="follow" class="btn btn-block btn-success">Follow</button>
+              {% elif check_following %}
+            <button type="submit" onclick="change_to_follow()" id="unfollow" class="btn btn-block btn-warning">Unfollow</button>
+              {% endif %}
+          </form>
+      {% endif %}
+      <div class="card-body">
+          <a href="" style="color: forestgreen"><h5 class="card-title">Followers: {{ follows_count }}</h5></a>
+          <a href="" style="color: forestgreen"><h5 class="card-title">Follows: {{ follower_count }}</h5></a>
+       {% if current_user.username == userpage.username %}
+        <a href="{% url 'newPost' %}" class="btn btn-primary">Post</a>
+       {% endif %}
+      </div>
+</div>
+
+{% for post in posts %}
+     <div class="card" style="margin: 0 auto;margin-top: 2%;width: 70%;margin-bottom: 2%">
+        <div class="card-body" style="border-bottom: 2px solid black">
+          <h3>{{ post.user.username }}</h3>
+             {% if current_user.username == userpage.username %}
+                <span><a href="{% url 'editPost' post.pk %}" class="text-muted">Edit</a></span><br>
+            {% endif %}
+            {{post.content}}
+            <hr>
+              <div class="row">
+                    <div>Likes:<span id="liked{{post.id}}">{{post.liked.all.count}}</span></div>
+                          {% if request.user in post.liked.all %}
+                              <a class="likebutton" href="#" data-catid="{{ post.id }}" id="{{post.id}}" data-total="{{post.liked.all.count}}"  data-value="Unlike" value="submit"><i class="fa fa-heart" id="heart{{post.id}}" style="margin-left: 10px;color:limegreen;"></i></a>
+                          {% else %}
+                              <a class="likebutton" href="#" data-catid="{{ post.id }}" id="{{post.id}}" data-total="{{post.liked.all.count}}"  data-value="Like" value="submit"><i class="fa fa-heart" id="heart{{post.id}}" style="margin-left: 10px;color:black;border: 1px solid"></i></a>
+                          {% endif %}
+                    <div style="text-align: end;margin-left: 60%">{{ post.date }}</div>
+              </div>
+        </div>
+    </div>
+
+{% endfor %}
+
+
+{% endblock %}

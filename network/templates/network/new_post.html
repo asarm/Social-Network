@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block title %}
+    New Post
+{% endblock %}
+
+{% block body %}
+    <div style="text-align: center;;margin-top: 3%"><h3>NEW POST</h3></div>
+    <form style="margin-left: 25%" action="{% url 'newPost' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input STYLE="margin-top: 1%" type="submit">
+    </form>
+
+{% endblock %}
